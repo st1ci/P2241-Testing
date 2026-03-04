@@ -58,7 +58,10 @@ public class Driver {
                 put("headless", true);
             }
         });
-        RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), options);
+        RemoteWebDriver driver = new RemoteWebDriver(
+                new URL("http://localhost:4444/wd/hub"),
+                options
+        );
         return driver;
     }
 }

@@ -13,39 +13,38 @@ import com.example.utils.Driver;
 
 public class FormTest {
 
-    public static WebDriver driver;
-    static public String URL = "https://demoqa.com/";
+    private WebDriver driver;
 
-    static public String FIRST_NAME = "Tcaci";
-    static public String LAST_NAME = "Valentin";
-    static public String EMAIL = "valentintcaci2@gmail.com";
-    static public String GENDER = "Male";
-    static public String NUMBER = "0605889555";
-    static public String DATE = "26 Apr 2006";
-    static public String SUBJECT = "Maths";
-    static public String HOBBY = "Sports";
-    static public String STATE = "Rajasthan";
-    static public String CITY = "Jaipur";
+    private static final String URL = "https://demoqa.com/";
+
+    private static final String FIRST_NAME = "Tcaci";
+    private static final String LAST_NAME = "Valentin";
+    private static final String EMAIL = "valentintcaci2@gmail.com";
+    private static final String GENDER = "Male";
+    private static final String NUMBER = "0605889555";
+    private static final String DATE = "26 Apr 2006";
+    private static final String SUBJECT = "Maths";
+    private static final String HOBBY = "Sports";
+    private static final String STATE = "Rajasthan";
+    private static final String CITY = "Jaipur";
 
     @BeforeMethod
     public void beforeMethod() throws MalformedURLException {
-        // driver = Driver.getLocalDriver();
-        driver = Driver.getRemoteDriver();
+         driver = Driver.getLocalDriver();
+//        driver = Driver.getRemoteDriver();
         driver.manage().window().maximize();
     }
 
-    @SuppressWarnings("null")
-    @Test(invocationCount = 1)
+    @Test
     public void formTest() {
-        System.out.println("\n---START TEST---\n");
+
+        System.out.println("\n--- START TEST ---\n");
+
         driver.get(URL);
 
         FormPom formPom = new FormPom(driver);
 
-        formPom.pause(1000);
-
         formPom.clickForms();
-        formPom.pause(1000);
         formPom.clickPracticeForms();
 
         formPom.setFirstName(FIRST_NAME);
@@ -58,30 +57,56 @@ public class FormTest {
         formPom.setHobbies(HOBBY);
         formPom.setState(STATE);
         formPom.setCity(CITY);
-        formPom.pause(1000);
+
+        // IMPORTANT - închide reclama înainte de submit
+        formPom.closeAdvert();
+
         formPom.clickSubmit();
 
-        String actualName = formPom.getTableData("Student Name");
-        Assert.assertEquals(actualName, FIRST_NAME + " " + LAST_NAME);
-        String actualEmail = formPom.getTableData("Student Email");
-        Assert.assertEquals(actualEmail, EMAIL);
-        String actualGender = formPom.getTableData("Gender");
-        Assert.assertEquals(actualGender, GENDER);
-        String actualMobile = formPom.getTableData("Mobile");
-        Assert.assertEquals(actualMobile, NUMBER);
-        String actualSubject = formPom.getTableData("Subjects");
-        Assert.assertEquals(actualSubject, SUBJECT);
-        String actualHobbies = formPom.getTableData("Hobbies");
-        Assert.assertEquals(actualHobbies, HOBBY);
-        String actualStateAndCity = formPom.getTableData("State and City");
-        Assert.assertEquals(actualStateAndCity, STATE + " " + CITY);
+        // ====== ASSERTURI ======
 
-        System.out.println("---FINISH TEST---");
-        formPom.pause(5000);
+        Assert.assertEquals(
+                formPom.getTableData("Student Name"),
+                FIRST_NAME + " " + LAST_NAME
+        );
+
+        Assert.assertEquals(
+                formPom.getTableData("Student Email"),
+                EMAIL
+        );
+
+        Assert.assertEquals(
+                formPom.getTableData("Gender"),
+                GENDER
+        );
+
+        Assert.assertEquals(
+                formPom.getTableData("Mobile"),
+                NUMBER
+        );
+
+        Assert.assertEquals(
+                formPom.getTableData("Subjects"),
+                SUBJECT
+        );
+
+        Assert.assertEquals(
+                formPom.getTableData("Hobbies"),
+                HOBBY
+        );
+
+        Assert.assertEquals(
+                formPom.getTableData("State and City"),
+                STATE + " " + CITY
+        );
+
+        System.out.println("\n--- FINISH TEST ---\n");
     }
 
     @AfterMethod
     public void afterMethod() {
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }
