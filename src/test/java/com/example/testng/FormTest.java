@@ -1,0 +1,87 @@
+package com.example.testng;
+
+import java.net.MalformedURLException;
+
+import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import com.example.pom.FormPom;
+import com.example.utils.Driver;
+
+public class FormTest {
+
+    public static WebDriver driver;
+    static public String URL = "https://demoqa.com/";
+
+    static public String FIRST_NAME = "Tcaci";
+    static public String LAST_NAME = "Valentin";
+    static public String EMAIL = "valentintcaci2@gmail.com";
+    static public String GENDER = "Male";
+    static public String NUMBER = "0605889555";
+    static public String DATE = "26 Apr 2006";
+    static public String SUBJECT = "Maths";
+    static public String HOBBY = "Sports";
+    static public String STATE = "Rajasthan";
+    static public String CITY = "Jaipur";
+
+    @BeforeMethod
+    public void beforeMethod() throws MalformedURLException {
+        // driver = Driver.getLocalDriver();
+        driver = Driver.getRemoteDriver();
+        driver.manage().window().maximize();
+    }
+
+    @SuppressWarnings("null")
+    @Test(invocationCount = 1)
+    public void formTest() {
+        System.out.println("\n---START TEST---\n");
+        driver.get(URL);
+
+        FormPom formPom = new FormPom(driver);
+
+        formPom.pause(1000);
+
+        formPom.clickForms();
+        formPom.pause(1000);
+        formPom.clickPracticeForms();
+
+        formPom.setFirstName(FIRST_NAME);
+        formPom.setLastName(LAST_NAME);
+        formPom.setEmail(EMAIL);
+        formPom.setGender(GENDER);
+        formPom.setNumber(NUMBER);
+        formPom.setDateOfBirth(DATE);
+        formPom.setSubject(SUBJECT);
+        formPom.setHobbies(HOBBY);
+        formPom.setState(STATE);
+        formPom.setCity(CITY);
+        formPom.pause(1000);
+        formPom.clickSubmit();
+
+        String actualName = formPom.getTableData("Student Name");
+        Assert.assertEquals(actualName, FIRST_NAME + " " + LAST_NAME);
+        String actualEmail = formPom.getTableData("Student Email");
+        Assert.assertEquals(actualEmail, EMAIL);
+        String actualGender = formPom.getTableData("Gender");
+        Assert.assertEquals(actualGender, GENDER);
+        String actualMobile = formPom.getTableData("Mobile");
+        Assert.assertEquals(actualMobile, NUMBER);
+        String actualSubject = formPom.getTableData("Subjects");
+        Assert.assertEquals(actualSubject, SUBJECT);
+        String actualHobbies = formPom.getTableData("Hobbies");
+        Assert.assertEquals(actualHobbies, HOBBY);
+        String actualStateAndCity = formPom.getTableData("State and City");
+        Assert.assertEquals(actualStateAndCity, STATE + " " + CITY);
+
+        System.out.println("---FINISH TEST---");
+        formPom.pause(5000);
+    }
+
+    @AfterMethod
+    public void afterMethod() {
+        driver.quit();
+    }
+}
